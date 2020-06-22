@@ -1,0 +1,226 @@
+<script>
+        //const { dialog } = require('electron').remote;
+        var fs = require('fs');
+        //var mm = require('musicmetadata');
+        var axios=require("axios");
+    
+        const api_key="121926e80b5830236fdcacb0ce687312";
+        localStorage.setItem("films", JSON.stringify([]));
+        var films = JSON.parse(localStorage.getItem('films'));
+        var genres = [];
+        var poster = "https://image.tmdb.org/t/p/w300/";
+        const youtube_key = "AIzaSyCfCSVALPnSVE3GH2BnhslRnL5M0SzyUsE";
+        const youtube_key2="AIzaSyDuiEn0Ewl8E99QzYXVapkhxFA2puswZU4";
+    </script>
+    
+    <h1>My movies</h1>
+                <label for="site-search">Add a movie or a folder of movies to your collection:</label>
+                <div>
+                <div style="margin-left: 10; margin-right:10" class="control" id='file_button' onclick="chooseMovieLocal()">
+                        <div id="icons"><i class="material-icons">add</i></div>
+                      </div>
+                <div style="margin-left: 10; margin-right:10" class="control" id='dir_button' onclick="chooseDirectory()">
+                    <div id="icons"><i class="material-icons">folder</i></div>
+                </div>
+            </div>
+                <script>
+                    function chooseMovieLocal() {
+                        dialog.showOpenDialog({ properties: ['openFile'], title: "Choose your movie", filters: [{extensions: ['mp3', 'ogg']}]
+                        }).then(function(file) {
+                            var name = file.filePaths[0].split("/").reverse()[0];
+                            addMovie(name);
+                        })
+                        document.getElementById('sort').style.display="inline";
+                        document.getElementById('sort2').style.display="inline";
+
+                    }
+                    function chooseDirectory() {
+                        dialog.showOpenDialog({ properties: ['openDirectory'], title: "Choose the directory containing movies" }).then(function(file) {
+                        var movies = fs.readdirSync(file.filePaths[0]);
+                        movies.map((movie, index) => {
+                            addSeveralMovies(movie, index);
+                        })
+                        document.getElementById('sort').style.display="inline";
+                        document.getElementById('sort2').style.display="inline";
+      });
+                    }
+                </script>
+                <br/>
+                <div>
+                <button style="margin-left: 10; margin-right:10; background-color: white; color: black; border-radius: 10px; border-color: black; padding-top: 10px; padding-bottom: 10px; padding-left: 10px; padding-right: 10px" id="genre0" onclick="displayAll()">All</button>
+                <button style="margin-left: 10; margin-right:10; background-color: rgb(181, 213, 250); color: black; border-radius: 10px; border-color: black; padding-top: 10px; padding-bottom: 10px" id="genre1" onclick="filter(1)"></button>
+                <button style="margin-left: 10; margin-right:10; background-color: rgb(181, 213, 250); color: black; border-radius: 10px; border-color: black; padding-top: 10px; padding-bottom: 10px" id="genre2" onclick="filter(2)"></button>
+                <button style="margin-left: 10; margin-right:10; background-color: rgb(181, 213, 250); color: black; border-radius: 10px; border-color: black; padding-top: 10px; padding-bottom: 10px" id="genre3" onclick="filter(3)"></button>
+                <button style="margin-left: 10; margin-right:10; background-color: rgb(181, 213, 250); color: black; border-radius: 10px; border-color: black; padding-top: 10px; padding-bottom: 10px" id="genre4" onclick="filter(4)"></button>
+                <button style="margin-left: 10; margin-right:10; background-color: rgb(181, 213, 250); color: black; border-radius: 10px; border-color: black; padding-top: 10px; padding-bottom: 10px" id="genre5" onclick="filter(5)"></button>
+                <button style="margin-left: 10; margin-right:10; background-color: rgb(181, 213, 250); color: black; border-radius: 10px; border-color: black; padding-top: 10px; padding-bottom: 10px" id="genre6" onclick="filter(6)"></button>
+                <button style="margin-left: 10; margin-right:10; background-color: rgb(181, 213, 250); color: black; border-radius: 10px; border-color: black; padding-top: 10px; padding-bottom: 10px" id="genre7" onclick="filter(7)"></button>
+                <button style="margin-left: 10; margin-right:10; background-color: rgb(181, 213, 250); color: black; border-radius: 10px; border-color: black; padding-top: 10px; padding-bottom: 10px" id="genre8" onclick="filter(8)"></button>
+                <button style="margin-left: 10; margin-right:10; background-color: rgb(181, 213, 250); color: black; border-radius: 10px; border-color: black; padding-top: 10px; padding-bottom: 10px" id="genre9" onclick="filter(9)"></button>
+                <button style="margin-left: 10; margin-right:10; background-color: rgb(181, 213, 250); color: black; border-radius: 10px; border-color: black; padding-top: 10px; padding-bottom: 10px" id="genre10" onclick="filter(10)"></button>
+                <button style="margin-left: 10; margin-right:10; background-color: rgb(181, 213, 250); color: black; border-radius: 10px; border-color: black; padding-top: 10px; padding-bottom: 10px" id="genre11" onclick="filter(11)"></button>
+                <button style="margin-left: 10; margin-right:10; background-color: rgb(181, 213, 250); color: black; border-radius: 10px; border-color: black; padding-top: 10px; padding-bottom: 10px" id="genre12" onclick="filter(12)"></button>
+                <button style="margin-left: 10; margin-right:10; background-color: rgb(181, 213, 250); color: black; border-radius: 10px; border-color: black; padding-top: 10px; padding-bottom: 10px" id="genre13" onclick="filter(13)"></button>
+                <button style="margin-left: 10; margin-right:10; background-color: rgb(181, 213, 250); color: black; border-radius: 10px; border-color: black; padding-top: 10px; padding-bottom: 10px" id="genre14" onclick="filter(14)"></button>
+                <button style="margin-left: 10; margin-right:10; background-color: rgb(181, 213, 250); color: black; border-radius: 10px; border-color: black; padding-top: 10px; padding-bottom: 10px" id="genre15" onclick="filter(15)"></button>
+                <button style="margin-left: 10; margin-right:10; background-color: rgb(181, 213, 250); color: black; border-radius: 10px; border-color: black; padding-top: 10px; padding-bottom: 10px" id="genre16" onclick="filter(16)"></button>
+                <button style="margin-left: 10; margin-right:10; background-color: rgb(181, 213, 250); color: black; border-radius: 10px; border-color: black; padding-top: 10px; padding-bottom: 10px" id="genre17" onclick="filter(17)"></button>
+                <button style="margin-left: 10; margin-right:10; background-color: rgb(181, 213, 250); color: black; border-radius: 10px; border-color: black; padding-top: 10px; padding-bottom: 10px" id="genre18" onclick="filter(18)"></button>
+                <button style="margin-left: 10; margin-right:10; background-color: rgb(181, 213, 250); color: black; border-radius: 10px; border-color: black; padding-top: 10px; padding-bottom: 10px" id="genre19" onclick="filter(19)"></button>
+                </div>
+                </div>
+                <script>
+                    function displayAll() {
+                        var films = JSON.parse(localStorage.getItem('films'));
+                        films.map((film, index) => {
+                            document.getElementById('img'+index).style.display="inline";
+                        })
+                    }
+                    function getId(name) {
+                        var i = -1;
+                        genres.map((genre, index) => {
+                            if (genre.name == name)
+                                i = genre.id;
+                        });
+                        return i;
+                    }
+                    function showFilm(film, idChosen, index) {
+                        const search = film.split(" ").join('+');
+                        axios.get("https://api.themoviedb.org/3/search/movie?api_key="+api_key+"&query="+search, {
+                            headers: {}
+                        }).then(res => {
+                            var data = res.data;
+                            first = data.results[0];
+                            var genresIds = first.genre_ids;
+                            var ok = 0;
+                            genresIds.map(id => {
+                                if (id == idChosen) {
+                                    ok = 1;
+                                    document.getElementById('img'+index).style.display="inline";
+                                }
+                            })
+                        }) 
+                    }
+                    function filter(x) {
+                        var genreChosen = document.getElementById('genre'+x).innerHTML;
+                        var idChosen = getId(genreChosen);
+    
+                        var films = JSON.parse(localStorage.getItem('films'));
+                        films.map((film, index) => {
+                            document.getElementById('img'+index).style.display="none";
+                        })
+                        films.map((film, index) => {
+                            showFilm(film, idChosen, index);
+                        })
+                    }
+                </script>
+                <br/>
+                <div id="sort2">
+                <button style="margin-left: 10; margin-right:10; background-color: white; color: black; border-radius: 5px; border-color: black; padding-top: 10px; padding-bottom: 10px; padding-left: 10px; padding-right: 10px; margin-bottom: 70px" onclick="sortAZ()">Sort A-Z</button>
+                </div>
+                    <div id="here" class="column" style="margin-left: 30px">
+                        <a onclick="choice(0)"><img style="border-radius: 10px" id="img0" src=""></a>
+                        <a onclick="choice(1)"><img style="border-radius: 10px" id="img1" src=""></a>
+                        <a onclick="choice(2)"><img style="border-radius: 10px" id="img2" src=""></a>
+                        <a onclick="choice(3)"><img style="border-radius: 10px" id="img3" src=""></a>
+                        <a onclick="choice(4)"><img style="border-radius: 10px" id="img4" src=""></a>
+                        <a onclick="choice(5)"><img style="border-radius: 10px" id="img5" src=""></a>
+                        <a onclick="choice(6)"><img style="border-radius: 10px" id="img6" src=""></a>
+                        <a onclick="choice(7)"><img style="border-radius: 10px" id="img7" src=""></a>
+                        <a onclick="choice(8)"><img style="border-radius: 10px" id="img8" src=""></a>
+                        <a onclick="choice(9)"><img style="border-radius: 10px" id="img9" src=""></a>
+                        <a onclick="choice(10)"><img style="border-radius: 10px" id="img10" src=""></a>
+                        <a onclick="choice(11)"><img style="border-radius: 10px" id="img11" src=""></a>
+                        <a onclick="choice(12)"><img style="border-radius: 10px" id="img12" src=""></a>
+                        <a onclick="choice(13)"><img style="border-radius: 10px" id="img13" src=""></a>
+                        <a onclick="choice(14)"><img style="border-radius: 10px" id="img14" src=""></a>
+                        <a onclick="choice(15)"><img style="border-radius: 10px" id="img15" src=""></a>
+                        <a onclick="choice(16)"><img style="border-radius: 10px" id="img16" src=""></a>
+                        <a onclick="choice(17)"><img style="border-radius: 10px" id="img17" src=""></a>
+                        <a onclick="choice(18)"><img style="border-radius: 10px" id="img18" src=""></a>
+                        <a onclick="choice(19)"><img style="border-radius: 10px" id="img19" src=""></a>
+                        <a onclick="choice(20)"><img style="border-radius: 10px" id="img20" src=""></a>
+                    </div>
+                
+                    <script>
+                        function choice(x) {
+                            var movies = JSON.parse(localStorage.getItem('films'));
+                            sessionStorage.setItem('film', movies[x]);
+                            const search = movies[x].split(" ").join('+');
+                            axios.get("https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=1&q=trailer+"+ search +"&key="+youtube_key2, {
+                                headers : {}
+                            }).then(res => {
+                                localStorage.setItem('videoId', res.data.items[0].id.videoId);
+                            })
+                            document.getElementById("main").innerHTML = ''
+                            $('#main').load("MovieDetail.html")
+                        }
+                    </script>
+            </div>
+            <script>
+                function findGenre(genre) {
+                    var found = 0;
+                    genres.map((g, index) => {
+                        if (genre == g.id) {
+                            found = index;
+                        }
+                    })
+                    return (genres[found].name);
+                }
+                function movieSearch(x) {
+                    var tmp = JSON.parse(localStorage.getItem('films'))
+                    const search = tmp[x].split(" ").join('+');
+                    axios.get("https://api.themoviedb.org/3/search/movie?api_key="+api_key+"&query="+search, {
+                        headers: {}
+                    }).then(res => {
+                        var data = res.data;
+                        var first = data.results[0];
+                        var id = 'img'+x
+                        document.getElementById(id).src=poster+first.poster_path;
+                        document.getElementById("genre").innerHTML="test";
+                    })
+                }
+                function sortAZ() {
+                    var tmp = JSON.parse(localStorage.getItem('films'));
+                    tmp.sort();
+                    localStorage.setItem('films', JSON.stringify(tmp));
+                    $('#main').load("Movies.html")
+                }
+                function addMovie(name) {
+                    const search = name.split(" ").join('+');
+                    var tmp = JSON.parse(localStorage.getItem('films'));
+                    var x = tmp.length;
+                    axios.get("https://api.themoviedb.org/3/search/movie?api_key="+api_key+"&query="+search, {
+                        headers: {}
+                    }).then(res => {
+                        var data = res.data;
+                        var first = data.results[0];
+                        var id = 'img'+x;
+                        var tmp = JSON.parse(localStorage.getItem('films'));
+                        tmp.push(first.title);
+                        //films = tmp;
+                        localStorage.setItem('films', JSON.stringify(tmp));
+                        document.getElementById(id).src=poster+first.poster_path;
+                    })
+                }
+                function addSeveralMovies(name, index) {
+                    const search = name.split(" ").join('+');
+                    
+                    axios.get("https://api.themoviedb.org/3/search/movie?api_key="+api_key+"&query="+search, {
+                        headers: {}
+                    }).then(res => {
+                        var tmp = JSON.parse(localStorage.getItem('films'));
+                        var x = tmp.length;
+                        var data = res.data;
+                        var first = data.results[0];
+                        var id = 'img'+x;
+                        tmp.push(first.title);
+                        //films = tmp;
+                        localStorage.setItem('films', JSON.stringify(tmp));
+                        document.getElementById(id).src=poster+first.poster_path;
+                    })
+                }
+            </script>
+            
+            <script src="../javascript/Movies.js"></script>
+            <!-- <script type="text/javascript" src="../javascript/Theme.js"></script> -->
