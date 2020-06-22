@@ -33,7 +33,7 @@ function setTheme(themeName) {
 var flag = 0;
 
 // Functions handling clicks on theme selectors
-const themeSelector = document.getElementById("theme-selector")
+var themeSelector = document.getElementById("theme-selector")
 themeSelector.addEventListener("click", function (e) {
     if (flag == 0) {
     $(this).siblings('.dark').animate({
