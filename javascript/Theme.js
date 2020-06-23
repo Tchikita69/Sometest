@@ -25,7 +25,7 @@ function setTheme(themeName) {
   //     setTheme('theme-light');
   //   document.getElementById('slider').checked = true;
   // }
-  if (localStorage.getItem('theme') && localStorage.getItem('theme') != null && localStorage.getItem != undefined)
+  if (localStorage.getItem('theme') && localStorage.getItem('theme') != null && localStorage.getItem('theme') != undefined)
     setTheme(localStorage.getItem('theme'));
   else
     setTheme('theme-dark')
